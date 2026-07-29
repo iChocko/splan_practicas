@@ -1,0 +1,27 @@
+# Secretos — jamás se suben
+.env
+
+# Material del supervisor (soluciones y notas) — nunca al repositorio
+supervisor/
+*-SUPERVISOR.md
+*_sol.py
+
+# Base de datos generada por el pipeline
+datos/
+*.db
+*.sqlite
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Sistema operativo
+.DS_Store
+
+# Herramientas locales
+.claude/
+.vscode/
+.idea/

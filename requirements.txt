@@ -1,0 +1,6 @@
+# Dependencias del proyecto.
+# Instalación:  pip install -r requirements.txt
+
+pandas>=2.0
+
+# --- Agreguen aquí las suyas (una por línea, con comentario de para qué es) ---
