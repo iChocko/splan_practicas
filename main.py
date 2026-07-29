@@ -19,10 +19,10 @@ from core.db import crear_esquema, resumen
 
 
 def correr_denue() -> None:
-    """Capa micro — implementa Abgail."""
+    """Capa micro — implementa Abigail."""
     from extract import denue
 
-    # --- INICIO CONFIGURACIÓN DENUE (Abgail) -------------------------
+    # --- INICIO CONFIGURACIÓN DENUE (Abigail) -------------------------
     # Define aquí qué municipios y qué sectores vas a descargar.
     municipios: list[str] = []
     sectores: list[str] = []

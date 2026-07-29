@@ -71,7 +71,7 @@ INSERT OR IGNORE INTO dim_sector_actividad (sector_id, sector_nombre, gran_divis
 
 
 -- ---------------------------------------------------------------------
--- CAPA MICRO — la llena Abgail desde la API del DENUE
+-- CAPA MICRO — la llena Abigail desde la API del DENUE
 -- Granularidad: un renglón = un establecimiento
 -- ---------------------------------------------------------------------
 
@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS denue_establecimiento (
     clase_actividad_id  TEXT,
     clase_actividad     TEXT,
     estrato_texto       TEXT,               -- como lo entrega el INEGI
-    estrato_min         INTEGER,            -- derivado por Abgail
-    estrato_max         INTEGER,            -- derivado por Abgail
+    estrato_min         INTEGER,            -- derivado por Abigail
+    estrato_max         INTEGER,            -- derivado por Abigail
     latitud             REAL,
     longitud            REAL,
     fecha_alta          TEXT,

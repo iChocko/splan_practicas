@@ -22,15 +22,23 @@ de dónde sale y qué tan fácil o difícil es obtenerlo bien.
 
 ---
 
-## Antes que nada: dos tokens distintos
+## Antes que nada: el token
 
-El INEGI entrega **un token por API**. El token del DENUE que usa Abgail no te
-sirve a ti, y el tuyo no le sirve a ella. Si intentas usar el equivocado, la
-respuesta no te va a decir "token inválido": te va a decir *"No se encontraron
-resultados"*, que es un mensaje engañoso y te va a hacer perder tiempo buscando
-el error en el lugar equivocado.
+Hoy el INEGI entrega **un mismo token que sirve para las dos APIs**. Te registras
+una vez y lo más probable es que pegues el mismo valor en las dos variables del
+`.env` (`TOKEN_DENUE` y `TOKEN_INDICADORES`). Las variables están separadas a
+propósito: si mañana el INEGI vuelve a emitir un token por API, solo cambian el
+`.env` y nada del código se rompe.
 
-El tuyo se pide en: **https://www.inegi.org.mx/servicios/api_indicadores.html**
+Un aviso que te va a ahorrar tiempo: si el token está vacío, mal pegado o la URL
+trae un parámetro fuera de lugar, la respuesta **no** te va a decir "token
+inválido". Te va a decir *"No se encontraron resultados"*, que es un mensaje
+engañoso y te manda a buscar el error donde no está. Cuando lo veas, revisa
+primero el token y el orden de la URL, no los datos.
+
+El token se pide en: **https://www.inegi.org.mx/servicios/api_indicadores.html**
+(el botón de registro abre una ventana emergente; si tienes bloqueador de
+pop-ups, usa la liga directa que está en `.env.example`).
 
 ---
 
@@ -46,7 +54,7 @@ con 23 renglones. Primer commit hecho en tu rama.
 
 ## Etapa 2 · Encontrar los indicadores y extraerlos
 
-Esta etapa tiene un paso previo que Abgail no tiene, y es la parte más parecida
+Esta etapa tiene un paso previo que Abigail no tiene, y es la parte más parecida
 a la investigación real: **la API no te dice qué indicadores existen. Tienes que
 averiguar sus claves tú.**
 
@@ -112,7 +120,7 @@ lo que vas a ver:
   puede traer menos historia que el programa en su conjunto. **Verifica el
   rango real de tu serie contigo misma; no lo asumas.**
 - El año base actual es **2018**, y el clasificador de actividades es **SCIAN
-  2018** — el mismo que usa el DENUE de Abgail. Que las dos fuentes compartan
+  2018** — el mismo que usa el DENUE de Abigail. Que las dos fuentes compartan
   clasificador no es casualidad: es lo que hace posible el análisis conjunto.
 
 Una advertencia sobre la IA aquí: si le pides claves de indicadores del INEGI
@@ -140,7 +148,7 @@ y el campo `COBER_GEO` de la observación coincide con el área que pediste.
 
 Implementa `transformar_observaciones()` y `construir_catalogo()`.
 
-Aquí tu dificultad es distinta a la de Abgail. Ella pelea con volumen; tú peleas
+Aquí tu dificultad es distinta a la de Abigail. Ella pelea con volumen; tú peleas
 con **estructura anidada**.
 
 La respuesta del INEGI no es una tabla. Es un diccionario que contiene una lista,
@@ -203,7 +211,7 @@ Sube tu rama y abre el PR. En la descripción incluye, como mínimo:
 - Qué hiciste con los valores faltantes.
 - Una cosa que no te gusta de tu propio código.
 
-Después, **revisa el PR de Abgail**. Léelo de verdad. Deja al menos un comentario
+Después, **revisa el PR de Abigail**. Léelo de verdad. Deja al menos un comentario
 sustantivo. Presta atención a lo que ella decidió sobre el estrato abierto: esa
 decisión afecta el análisis conjunto, y tú eres la única persona que la va a leer
 antes de que se vuelva permanente.
@@ -232,6 +240,6 @@ sostenerlas en voz alta:
 - El ITAEE se publica alrededor de 120 días después del trimestre. Si en agosto
   te piden un diagnóstico de la economía estatal, ¿cuál es el dato más reciente
   que realmente tienes, y qué haces con ese rezago?
-- Bajaste series de tiempo trimestrales. Abgail bajó una fotografía de un
+- Bajaste series de tiempo trimestrales. Abigail bajó una fotografía de un
   momento. ¿Es legítimo compararlas? ¿Qué tendrías que decir en una nota al pie
   para que la comparación sea honesta?

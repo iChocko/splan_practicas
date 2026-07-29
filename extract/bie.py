@@ -102,7 +102,7 @@ def construir_catalogo(series: list[dict]) -> pd.DataFrame:
               frecuencia, fuente
 
     `gran_division` es la columna más importante del proyecto: es la que
-    permite unir tu capa macro con la capa micro de Abgail. Los valores
+    permite unir tu capa macro con la capa micro de Abigail. Los valores
     válidos son exactamente: 'Primarias', 'Secundarias', 'Terciarias',
     'Total'. Cualquier otra cosa rompe el JOIN final.
     """

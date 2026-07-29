@@ -19,7 +19,7 @@ salió, es probable que esté explicado aquí.
 | Persona | Documento | Fuente de datos |
 |---------|-----------|-----------------|
 | **Aremy** | [`practica-A-aremy-tiie.md`](practica-03-automatizacion/practica-A-aremy-tiie.md) | Banco de México (TIIE a 28 días) |
-| **Abgail** | [`practica-B-abgail-denue.md`](practica-03-automatizacion/practica-B-abgail-denue.md) | Data México (DENUE) |
+| **Abigail** | [`practica-B-abigail-denue.md`](practica-03-automatizacion/practica-B-abigail-denue.md) | Data México (DENUE) |
 
 Conceptos base: [`00-conceptos-basicos.md`](practica-03-automatizacion/00-conceptos-basicos.md)
 

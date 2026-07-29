@@ -28,7 +28,7 @@ git checkout main                   # regresar a la principal
 En este proyecto:
 
 - Aremy → `feature/bie-aremy`
-- Abgail → `feature/denue-abgail`
+- Abigail → `feature/denue-abigail`
 
 **`main` es sagrada.** Nadie le hace commits directos. `main` siempre debe estar
 en un estado que funcione.
@@ -95,7 +95,7 @@ Cuando pasa, el archivo se te marca así:
 
 ```
 <<<<<<< HEAD
-| Micro | Abgail | Funcionando | 47,821 |
+| Micro | Abigail | Funcionando | 47,821 |
 =======
 | Macro | Aremy | Funcionando | 96 |
 >>>>>>> feature/bie-aremy
@@ -173,7 +173,7 @@ de error son crípticos pero muy estándar. Peguen el error completo y pregunten
 
 Ejemplos de buenos prompts:
 
-> Estoy trabajando en una rama llamada `feature/denue-abgail` y al hacer
+> Estoy trabajando en una rama llamada `feature/denue-abigail` y al hacer
 > `git merge main` me salió este mensaje: [pegar el mensaje completo].
 > Explícame qué significa, qué archivo tengo que abrir y qué tengo que decidir.
 > No me des los comandos todavía, primero quiero entender qué está pasando.

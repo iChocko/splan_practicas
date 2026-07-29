@@ -1,7 +1,7 @@
 """
 extract.denue — Capa MICRO del proyecto.
 
-DUEÑA DE ESTE ARCHIVO: Abgail.
+DUEÑA DE ESTE ARCHIVO: Abigail.
 Nadie más lo edita. Si alguien más necesita un cambio aquí, te lo pide
 por un comentario en el PR o por un issue.
 
@@ -10,7 +10,7 @@ Tu trabajo es llenar los cuerpos de estas tres funciones. Las FIRMAS
 son parte del contrato de datos y `main.py` y la práctica de Aremy
 asumen que existen tal como están.
 
-Lee primero: docs/practica-B-abgail-denue-micro.md
+Lee primero: docs/practica-B-abigail-denue-micro.md
              docs/contrato-de-datos.md
 """
 
@@ -52,7 +52,7 @@ def cuantificar(cve_mun: str) -> dict[str, int]:
     - La respuesta trae también subsectores, ramas y clases. Tú solo
       quieres los códigos de 2 dígitos.
     """
-    # TODO (Abgail): construir la URL, llamar a obtener_json y filtrar.
+    # TODO (Abigail): construir la URL, llamar a obtener_json y filtrar.
     raise NotImplementedError("Etapa 2 de tu práctica")
 
 
@@ -88,7 +88,7 @@ def extraer(cve_mun: str, sector_id: str) -> list[dict]:
       vacía. Corta la conexión y tu programa va a ver un error. Por eso
       existe `cuantificar()`: úsalo antes para no pedir lo que no existe.
     """
-    # TODO (Abgail): construir la URL, paginar y acumular resultados.
+    # TODO (Abigail): construir la URL, paginar y acumular resultados.
     raise NotImplementedError("Etapa 2 de tu práctica")
 
 
@@ -111,7 +111,7 @@ def transformar(registros: list[dict]) -> pd.DataFrame:
       3. `cve_mun` no viene en un campo propio. Está adentro de otro
          campo del registro. Encuéntralo.
     """
-    # TODO (Abgail): limpiar, derivar columnas y devolver el DataFrame.
+    # TODO (Abigail): limpiar, derivar columnas y devolver el DataFrame.
     raise NotImplementedError("Etapa 3 de tu práctica")
 
 
@@ -122,7 +122,7 @@ def cargar(df: pd.DataFrame) -> int:
 
     Devuelve el número de filas escritas.
     """
-    # TODO (Abgail): usar core.db.guardar. Es una línea.
+    # TODO (Abigail): usar core.db.guardar. Es una línea.
     raise NotImplementedError("Etapa 4 de tu práctica")
 
 

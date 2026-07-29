@@ -1,4 +1,4 @@
-# Práctica B · Abgail — El DENUE por estado (Data México)
+# Práctica B · Abigail — El DENUE por estado (Data México)
 
 > **Antes de empezar:** lee [`00-conceptos-basicos.md`](00-conceptos-basicos.md). Todo lo que aquí suene raro está explicado ahí.
 

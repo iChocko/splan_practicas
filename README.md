@@ -25,7 +25,7 @@ Ninguna de las dos puede contestar esto sola.
 
 | Persona | Capa | Fuente | Qué construye |
 |---------|------|--------|---------------|
-| **Abgail** | Micro | API del DENUE | Un renglón por establecimiento: dónde está, a qué se dedica, de qué tamaño es |
+| **Abigail** | Micro | API del DENUE | Un renglón por establecimiento: dónde está, a qué se dedica, de qué tamaño es |
 | **Aremy** | Macro | API de Indicadores (BIE) | Series de tiempo de actividad económica de Campeche y del país |
 
 Las dos capas se unen por la columna `gran_division` (Primarias / Secundarias /
@@ -43,7 +43,7 @@ y no la inventa nadie sobre la marcha.
 │   ├── config.py           ·  lectura de tokens desde .env
 │   └── db.py               ·  guardado en SQLite sin duplicados
 ├── extract/
-│   ├── denue.py            ← dueña: Abgail
+│   ├── denue.py            ← dueña: Abigail
 │   └── bie.py              ← dueña: Aremy
 ├── docs/                   ← consignas, contrato de datos y conceptos
 ├── integracion/            ← el análisis final, que se hace en pareja
@@ -59,7 +59,7 @@ y no la inventa nadie sobre la marcha.
    las dos se están prometiendo mutuamente.
 3. Lee tu consigna:
    - Aremy → [`docs/practica-A-aremy-bie-macro.md`](docs/practica-A-aremy-bie-macro.md)
-   - Abgail → [`docs/practica-B-abgail-denue-micro.md`](docs/practica-B-abgail-denue-micro.md)
+   - Abigail → [`docs/practica-B-abigail-denue-micro.md`](docs/practica-B-abigail-denue-micro.md)
 
 ## Puesta en marcha
 

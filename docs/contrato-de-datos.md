@@ -15,7 +15,7 @@ mal y lo descubran hasta el análisis final.
 
 ---
 
-## Tabla `denue_establecimiento` — la llena Abgail
+## Tabla `denue_establecimiento` — la llena Abigail
 
 Un renglón = un establecimiento.
 
@@ -38,7 +38,7 @@ Un renglón = un establecimiento.
 | `fecha_alta` | TEXT | |
 | `fecha_extraccion` | TEXT | Fecha en que corriste el pipeline, `AAAA-MM-DD` |
 
-**Compromiso de Abgail:** `sector_id` siempre viene con dos dígitos y siempre
+**Compromiso de Abigail:** `sector_id` siempre viene con dos dígitos y siempre
 existe en el catálogo. Si algún día aparece un sector nuevo, se abre un issue,
 no se mete a la fuerza.
 

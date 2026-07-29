@@ -1,7 +1,7 @@
-# Práctica B · Abgail — Capa micro: el DENUE
+# Práctica B · Abigail — Capa micro: el DENUE
 
 **Tu archivo:** `extract/denue.py`
-**Tu rama:** `feature/denue-abgail`
+**Tu rama:** `feature/denue-abigail`
 **Tu token:** el de la API del DENUE, en `.env` como `TOKEN_DENUE`
 
 ---
