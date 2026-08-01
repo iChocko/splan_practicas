@@ -52,8 +52,17 @@ def cuantificar(cve_mun: str) -> dict[str, int]:
     - La respuesta trae también subsectores, ramas y clases. Tú solo
       quieres los códigos de 2 dígitos.
     """
-    # TODO (Abigail): construir la URL, llamar a obtener_json y filtrar.
-    raise NotImplementedError("Etapa 2 de tu práctica")
+    token = obtener_token("TOKEN_DENUE")
+    area = ENTIDAD_CAMPECHE + cve_mun
+    url = f"{BASE}/Cuantificar/0/{area}/0/{token}"
+    respuesta = obtener_json(url, descripcion=f"DENUE cuantificar {area}")
+
+    sectores: dict[str, int] = {}
+    for fila in respuesta:
+        codigo = fila["AE"]
+        if len(codigo) == 2:
+            sectores[codigo] = int(fila["Total"])
+    return sectores
 
 
 def extraer(cve_mun: str, sector_id: str) -> list[dict]:
@@ -88,8 +97,29 @@ def extraer(cve_mun: str, sector_id: str) -> list[dict]:
       vacía. Corta la conexión y tu programa va a ver un error. Por eso
       existe `cuantificar()`: úsalo antes para no pedir lo que no existe.
     """
-    # TODO (Abigail): construir la URL, paginar y acumular resultados.
-    raise NotImplementedError("Etapa 2 de tu práctica")
+    total = cuantificar(cve_mun).get(sector_id, 0)
+    if total == 0:
+        return []
+
+    token = obtener_token("TOKEN_DENUE")
+    tamano_pagina = 1000
+    registros: list[dict] = []
+
+    # Orden de parámetros de BuscarAreaAct:
+    # Entidad / Municipio / Localidad / AGEB / Manzana / Sector /
+    # Subsector / Rama / Clase / Nombre / RegIni / RegFin / Id / Token
+    for inicio in range(1, total + 1, tamano_pagina):
+        fin = min(inicio + tamano_pagina - 1, total)
+        url = (
+            f"{BASE}/BuscarAreaAct/{ENTIDAD_CAMPECHE}/{cve_mun}/0/0/0/"
+            f"{sector_id}/0/0/0/0/{inicio}/{fin}/0/{token}"
+        )
+        pagina = obtener_json(
+            url,
+            descripcion=f"DENUE {cve_mun}/{sector_id} filas {inicio}-{fin}",
+        )
+        registros.extend(pagina)
+    return registros
 
 
 def transformar(registros: list[dict]) -> pd.DataFrame:
