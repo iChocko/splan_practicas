@@ -16,6 +16,9 @@ Lee primero: docs/practica-B-abigail-denue-micro.md
 
 from __future__ import annotations
 
+import re
+from datetime import date
+
 import pandas as pd
 
 from core.api import obtener_json
@@ -141,8 +144,54 @@ def transformar(registros: list[dict]) -> pd.DataFrame:
       3. `cve_mun` no viene en un campo propio. Está adentro de otro
          campo del registro. Encuéntralo.
     """
-    # TODO (Abigail): limpiar, derivar columnas y devolver el DataFrame.
-    raise NotImplementedError("Etapa 3 de tu práctica")
+    df = pd.DataFrame(registros)
+    fecha_extraccion = date.today().isoformat()
+
+    # El estrato llega como texto con rangos ('0 a 5 personas', '251 y más
+    # personas'). El estrato abierto no tiene tope superior: estrato_max queda
+    # en None, porque inventarle un número sería dar una precisión que el dato
+    # no tiene.
+    rangos = df["Estrato"].map(_estrato_a_rango)
+    estrato_min, estrato_max = zip(*rangos)
+
+    # cve_mun no viene en un campo propio. Está adentro de AreaGeo, que trae
+    # entidad(2) + municipio(3) + localidad(4): '040080001' -> '008'.
+    cve_mun = df["AreaGeo"].str.slice(2, 5)
+
+    return pd.DataFrame({
+        "id_establecimiento": df["Id"],
+        "clee": df["CLEE"],
+        "nombre": df["Nombre"],
+        "razon_social": df["Razon_social"],
+        "cve_ent": ENTIDAD_CAMPECHE,
+        "cve_mun": cve_mun,
+        "sector_id": df["SECTOR_ACTIVIDAD_ID"],
+        "clase_actividad_id": df["CLASE_ACTIVIDAD_ID"],
+        "clase_actividad": df["Clase_actividad"],
+        "estrato_texto": df["Estrato"],
+        "estrato_min": estrato_min,
+        "estrato_max": estrato_max,
+        "latitud": pd.to_numeric(df["Latitud"], errors="coerce"),
+        "longitud": pd.to_numeric(df["Longitud"], errors="coerce"),
+        "fecha_alta": df["Fecha_Alta"],
+        "fecha_extraccion": fecha_extraccion,
+    })
+
+
+def _estrato_a_rango(texto: str) -> tuple[int | None, int | None]:
+    """
+    Convierte el texto del estrato en un par (mínimo, máximo).
+
+    '0 a 5 personas'   -> (0, 5)
+    '101 a 250 personas' -> (101, 250)
+    '251 y más personas' -> (251, None)   # no hay tope superior
+    """
+    numeros = [int(n) for n in re.findall(r"\d+", texto)]
+    if not numeros:
+        return None, None
+    minimo = numeros[0]
+    maximo = numeros[1] if len(numeros) > 1 else None
+    return minimo, maximo
 
 
 def cargar(df: pd.DataFrame) -> int:
@@ -152,8 +201,7 @@ def cargar(df: pd.DataFrame) -> int:
 
     Devuelve el número de filas escritas.
     """
-    # TODO (Abigail): usar core.db.guardar. Es una línea.
-    raise NotImplementedError("Etapa 4 de tu práctica")
+    return guardar(df, "denue_establecimiento")
 
 
 def correr(municipios: list[str], sectores: list[str]) -> int:
