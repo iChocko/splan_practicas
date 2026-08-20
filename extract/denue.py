@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import re
 from datetime import date
+from functools import lru_cache
 
 import pandas as pd
 
@@ -29,6 +30,7 @@ BASE = "https://www.inegi.org.mx/app/api/denue/v1/consulta"
 ENTIDAD_CAMPECHE = "04"
 
 
+@lru_cache(maxsize=None)
 def cuantificar(cve_mun: str) -> dict[str, int]:
     """
     Devuelve cuántos establecimientos hay en un municipio, por sector SCIAN,
@@ -144,6 +146,15 @@ def transformar(registros: list[dict]) -> pd.DataFrame:
       3. `cve_mun` no viene en un campo propio. Está adentro de otro
          campo del registro. Encuéntralo.
     """
+    if not registros:
+        return pd.DataFrame(columns=[
+            "id_establecimiento", "clee", "nombre", "razon_social",
+            "cve_ent", "cve_mun", "sector_id", "clase_actividad_id",
+            "clase_actividad", "estrato_texto", "estrato_min",
+            "estrato_max", "latitud", "longitud", "fecha_alta",
+            "fecha_extraccion",
+        ])
+
     df = pd.DataFrame(registros)
     fecha_extraccion = date.today().isoformat()
 
