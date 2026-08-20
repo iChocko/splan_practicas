@@ -3,4 +3,6 @@
 
 pandas>=2.0
 
+matplotlib>=3.7    # para la gráfica del análisis conjunto (integracion/)
+
 # --- Agreguen aquí las suyas (una por línea, con comentario de para qué es) ---
