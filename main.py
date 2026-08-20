@@ -43,7 +43,52 @@ def correr_bie() -> None:
     # --- INICIO CONFIGURACIÓN BIE (Aremy) ----------------------------
     # Define aquí las series que vas a descargar. Cada elemento es un
     # diccionario con los metadatos que pide construir_catalogo().
-    series: list[dict] = []
+    series: list[dict] = [
+        {
+            "indicador_id": "6207137837",
+            "indicador_nombre": (
+                "ITAEE. Año base 2018. Actividades económicas por "
+                "entidad federativa. Total de la economía"
+            ),
+            "gran_division": "Total",
+            "unidad": "Índice de volumen físico base 2018=100",
+            "frecuencia": "Trimestral",
+            "fuente": "BIE",
+        },
+        {
+            "indicador_id": "6207137768",
+            "indicador_nombre": (
+                "ITAEE. Año base 2018. Actividades económicas por "
+                "entidad federativa. Actividades primarias"
+            ),
+            "gran_division": "Primarias",
+            "unidad": "Índice de volumen físico base 2018=100",
+            "frecuencia": "Trimestral",
+            "fuente": "BIE",
+        },
+        {
+            "indicador_id": "6207137758",
+            "indicador_nombre": (
+                "ITAEE. Año base 2018. Actividades económicas por "
+                "entidad federativa. Actividades secundarias"
+            ),
+            "gran_division": "Secundarias",
+            "unidad": "Índice de volumen físico base 2018=100",
+            "frecuencia": "Trimestral",
+            "fuente": "BIE",
+        },
+        {
+            "indicador_id": "6207137762",
+            "indicador_nombre": (
+                "ITAEE. Año base 2018. Actividades económicas por "
+                "entidad federativa. Actividades terciarias"
+            ),
+            "gran_division": "Terciarias",
+            "unidad": "Índice de volumen físico base 2018=100",
+            "frecuencia": "Trimestral",
+            "fuente": "BIE",
+        },
+    ]
     # --- FIN CONFIGURACIÓN BIE ---------------------------------------
 
     if not series:

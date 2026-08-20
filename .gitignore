@@ -11,6 +11,9 @@ datos/
 *.db
 *.sqlite
 
+# Catálogo de indicadores: se regenera con herramientas/descargar_catalogo.py
+catalogo_indicadores.json
+
 # Python
 __pycache__/
 *.py[cod]

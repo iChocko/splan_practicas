@@ -14,6 +14,8 @@ Lee primero: docs/practica-A-aremy-bie-macro.md
 
 from __future__ import annotations
 
+from datetime import datetime
+
 import pandas as pd
 
 from core.api import obtener_json
@@ -66,8 +68,14 @@ def extraer(indicador_id: str, area_geografica: str) -> dict:
       tu comprobante de que el parámetro de área sí filtró lo que pediste:
       debe coincidir con el área que enviaste en la URL.
     """
-    # TODO (Aremy): construir la URL y llamar a obtener_json.
-    raise NotImplementedError("Etapa 2 de tu práctica")
+    token = obtener_token("TOKEN_INDICADORES")
+    url = (
+        f"{BASE}/{indicador_id}/es/{area_geografica}/false/"
+        f"{FUENTE}/2.0/{token}?type=json"
+    )
+    return obtener_json(
+        url, descripcion=f"indicador {indicador_id} área {area_geografica}"
+    )
 
 
 def transformar_observaciones(
@@ -89,8 +97,37 @@ def transformar_observaciones(
          Si la serie no es trimestral, `trimestre` va en None.
       3. Los valores llegan como texto. Un valor vacío no es cero.
     """
-    # TODO (Aremy): aplanar la respuesta y devolver el DataFrame.
-    raise NotImplementedError("Etapa 3 de tu práctica")
+    filas = []
+    if not isinstance(respuesta, dict) or "Series" not in respuesta or not respuesta["Series"]:
+        raise ValueError(
+            f"Respuesta inesperada del INEGI para el indicador {indicador_id} "
+            f"área {area_geografica}. Si dice 'No se encontraron resultados', "
+            "revisa el token y el orden de los parámetros en la URL."
+        )
+    observaciones = respuesta["Series"][0].get("OBSERVATIONS") or []
+    for observacion in observaciones:
+        valor = observacion["OBS_VALUE"]
+        valor = None if valor is None or str(valor).strip() == "" else float(valor)
+
+        periodo = observacion["TIME_PERIOD"]
+        partes = periodo.split("/")
+        anio = int(partes[0])
+        trimestre = None
+        if len(partes) == 2 and partes[1].isdigit() and 1 <= int(partes[1]) <= 4:
+            trimestre = int(partes[1])
+
+        filas.append(
+            {
+                "indicador_id": indicador_id,
+                "area_geografica": area_geografica,
+                "periodo": periodo,
+                "anio": anio,
+                "trimestre": trimestre,
+                "valor": valor,
+                "fecha_extraccion": datetime.now().date().isoformat(),
+            }
+        )
+    return pd.DataFrame(filas)
 
 
 def construir_catalogo(series: list[dict]) -> pd.DataFrame:
@@ -106,20 +143,29 @@ def construir_catalogo(series: list[dict]) -> pd.DataFrame:
     válidos son exactamente: 'Primarias', 'Secundarias', 'Terciarias',
     'Total'. Cualquier otra cosa rompe el JOIN final.
     """
-    # TODO (Aremy): devolver el catálogo como DataFrame.
-    raise NotImplementedError("Etapa 3 de tu práctica")
+    return pd.DataFrame(
+        [
+            {
+                "indicador_id": s["indicador_id"],
+                "indicador_nombre": s["indicador_nombre"],
+                "gran_division": s["gran_division"],
+                "unidad": s["unidad"],
+                "frecuencia": s["frecuencia"],
+                "fuente": s["fuente"],
+            }
+            for s in series
+        ]
+    )
 
 
 def cargar_observaciones(df: pd.DataFrame) -> int:
     """Guarda observaciones en `bie_observacion`. Idempotente."""
-    # TODO (Aremy): usar core.db.guardar.
-    raise NotImplementedError("Etapa 4 de tu práctica")
+    return guardar(df, "bie_observacion")
 
 
 def cargar_catalogo(df: pd.DataFrame) -> int:
     """Guarda metadatos en `bie_indicador`. Idempotente."""
-    # TODO (Aremy): usar core.db.guardar.
-    raise NotImplementedError("Etapa 4 de tu práctica")
+    return guardar(df, "bie_indicador")
 
 
 def correr(series: list[dict], area_geografica: str = CAMPECHE) -> int:
