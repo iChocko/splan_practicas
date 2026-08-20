@@ -23,9 +23,19 @@ def correr_denue() -> None:
     from extract import denue
 
     # --- INICIO CONFIGURACIÓN DENUE (Abigail) -------------------------
-    # Define aquí qué municipios y qué sectores vas a descargar.
-    municipios: list[str] = []
-    sectores: list[str] = []
+    # Universo completo: los 13 municipios y todos los sectores del
+    # catálogo. Con esto se puede comparar la composición de unidades
+    # económicas contra la actividad agregada por gran_division y por
+    # municipio, que es la pregunta central de la práctica.
+    municipios: list[str] = [
+        "001", "002", "003", "004", "005", "006", "007",
+        "008", "009", "010", "011", "012", "013",
+    ]
+    sectores: list[str] = [
+        "11", "21", "22", "23", "31", "32", "33", "43", "46",
+        "48", "49", "51", "52", "53", "54", "55", "56", "61",
+        "62", "71", "72", "81", "93",
+    ]
     # --- FIN CONFIGURACIÓN DENUE -------------------------------------
 
     if not municipios or not sectores:

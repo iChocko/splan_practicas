@@ -16,6 +16,10 @@ Lee primero: docs/practica-B-abigail-denue-micro.md
 
 from __future__ import annotations
 
+import re
+from datetime import date
+from functools import lru_cache
+
 import pandas as pd
 
 from core.api import obtener_json
@@ -26,6 +30,7 @@ BASE = "https://www.inegi.org.mx/app/api/denue/v1/consulta"
 ENTIDAD_CAMPECHE = "04"
 
 
+@lru_cache(maxsize=None)
 def cuantificar(cve_mun: str) -> dict[str, int]:
     """
     Devuelve cuántos establecimientos hay en un municipio, por sector SCIAN,
@@ -52,8 +57,17 @@ def cuantificar(cve_mun: str) -> dict[str, int]:
     - La respuesta trae también subsectores, ramas y clases. Tú solo
       quieres los códigos de 2 dígitos.
     """
-    # TODO (Abigail): construir la URL, llamar a obtener_json y filtrar.
-    raise NotImplementedError("Etapa 2 de tu práctica")
+    token = obtener_token("TOKEN_DENUE")
+    area = ENTIDAD_CAMPECHE + cve_mun
+    url = f"{BASE}/Cuantificar/0/{area}/0/{token}"
+    respuesta = obtener_json(url, descripcion=f"DENUE cuantificar {area}")
+
+    sectores: dict[str, int] = {}
+    for fila in respuesta:
+        codigo = fila["AE"]
+        if len(codigo) == 2:
+            sectores[codigo] = int(fila["Total"])
+    return sectores
 
 
 def extraer(cve_mun: str, sector_id: str) -> list[dict]:
@@ -88,8 +102,29 @@ def extraer(cve_mun: str, sector_id: str) -> list[dict]:
       vacía. Corta la conexión y tu programa va a ver un error. Por eso
       existe `cuantificar()`: úsalo antes para no pedir lo que no existe.
     """
-    # TODO (Abigail): construir la URL, paginar y acumular resultados.
-    raise NotImplementedError("Etapa 2 de tu práctica")
+    total = cuantificar(cve_mun).get(sector_id, 0)
+    if total == 0:
+        return []
+
+    token = obtener_token("TOKEN_DENUE")
+    tamano_pagina = 1000
+    registros: list[dict] = []
+
+    # Orden de parámetros de BuscarAreaAct:
+    # Entidad / Municipio / Localidad / AGEB / Manzana / Sector /
+    # Subsector / Rama / Clase / Nombre / RegIni / RegFin / Id / Token
+    for inicio in range(1, total + 1, tamano_pagina):
+        fin = min(inicio + tamano_pagina - 1, total)
+        url = (
+            f"{BASE}/BuscarAreaAct/{ENTIDAD_CAMPECHE}/{cve_mun}/0/0/0/"
+            f"{sector_id}/0/0/0/0/{inicio}/{fin}/0/{token}"
+        )
+        pagina = obtener_json(
+            url,
+            descripcion=f"DENUE {cve_mun}/{sector_id} filas {inicio}-{fin}",
+        )
+        registros.extend(pagina)
+    return registros
 
 
 def transformar(registros: list[dict]) -> pd.DataFrame:
@@ -111,8 +146,63 @@ def transformar(registros: list[dict]) -> pd.DataFrame:
       3. `cve_mun` no viene en un campo propio. Está adentro de otro
          campo del registro. Encuéntralo.
     """
-    # TODO (Abigail): limpiar, derivar columnas y devolver el DataFrame.
-    raise NotImplementedError("Etapa 3 de tu práctica")
+    if not registros:
+        return pd.DataFrame(columns=[
+            "id_establecimiento", "clee", "nombre", "razon_social",
+            "cve_ent", "cve_mun", "sector_id", "clase_actividad_id",
+            "clase_actividad", "estrato_texto", "estrato_min",
+            "estrato_max", "latitud", "longitud", "fecha_alta",
+            "fecha_extraccion",
+        ])
+
+    df = pd.DataFrame(registros)
+    fecha_extraccion = date.today().isoformat()
+
+    # El estrato llega como texto con rangos ('0 a 5 personas', '251 y más
+    # personas'). El estrato abierto no tiene tope superior: estrato_max queda
+    # en None, porque inventarle un número sería dar una precisión que el dato
+    # no tiene.
+    rangos = df["Estrato"].map(_estrato_a_rango)
+    estrato_min, estrato_max = zip(*rangos)
+
+    # cve_mun no viene en un campo propio. Está adentro de AreaGeo, que trae
+    # entidad(2) + municipio(3) + localidad(4): '040080001' -> '008'.
+    cve_mun = df["AreaGeo"].str.slice(2, 5)
+
+    return pd.DataFrame({
+        "id_establecimiento": df["Id"],
+        "clee": df["CLEE"],
+        "nombre": df["Nombre"],
+        "razon_social": df["Razon_social"],
+        "cve_ent": ENTIDAD_CAMPECHE,
+        "cve_mun": cve_mun,
+        "sector_id": df["SECTOR_ACTIVIDAD_ID"],
+        "clase_actividad_id": df["CLASE_ACTIVIDAD_ID"],
+        "clase_actividad": df["Clase_actividad"],
+        "estrato_texto": df["Estrato"],
+        "estrato_min": estrato_min,
+        "estrato_max": estrato_max,
+        "latitud": pd.to_numeric(df["Latitud"], errors="coerce"),
+        "longitud": pd.to_numeric(df["Longitud"], errors="coerce"),
+        "fecha_alta": df["Fecha_Alta"],
+        "fecha_extraccion": fecha_extraccion,
+    })
+
+
+def _estrato_a_rango(texto: str) -> tuple[int | None, int | None]:
+    """
+    Convierte el texto del estrato en un par (mínimo, máximo).
+
+    '0 a 5 personas'   -> (0, 5)
+    '101 a 250 personas' -> (101, 250)
+    '251 y más personas' -> (251, None)   # no hay tope superior
+    """
+    numeros = [int(n) for n in re.findall(r"\d+", texto)]
+    if not numeros:
+        return None, None
+    minimo = numeros[0]
+    maximo = numeros[1] if len(numeros) > 1 else None
+    return minimo, maximo
 
 
 def cargar(df: pd.DataFrame) -> int:
@@ -122,8 +212,7 @@ def cargar(df: pd.DataFrame) -> int:
 
     Devuelve el número de filas escritas.
     """
-    # TODO (Abigail): usar core.db.guardar. Es una línea.
-    raise NotImplementedError("Etapa 4 de tu práctica")
+    return guardar(df, "denue_establecimiento")
 
 
 def correr(municipios: list[str], sectores: list[str]) -> int:
