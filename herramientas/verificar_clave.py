@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from core.api import obtener_json
 from core.config import obtener_token
 from extract.bie import extraer

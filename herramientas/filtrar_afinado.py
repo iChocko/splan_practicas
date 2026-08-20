@@ -1,8 +1,11 @@
 import json
+from pathlib import Path
 
 import pandas as pd
 
-with open("catalogo_indicadores.json", encoding="utf-8") as f:
+RAIZ = Path(__file__).resolve().parent.parent
+
+with open(RAIZ / "catalogo_indicadores.json", encoding="utf-8") as f:
     datos = json.load(f)
 
 df = pd.DataFrame(datos["CODE"])

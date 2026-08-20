@@ -98,7 +98,13 @@ def transformar_observaciones(
       3. Los valores llegan como texto. Un valor vacío no es cero.
     """
     filas = []
-    observaciones = respuesta["Series"][0]["OBSERVATIONS"]
+    if not isinstance(respuesta, dict) or "Series" not in respuesta or not respuesta["Series"]:
+        raise ValueError(
+            f"Respuesta inesperada del INEGI para el indicador {indicador_id} "
+            f"área {area_geografica}. Si dice 'No se encontraron resultados', "
+            "revisa el token y el orden de los parámetros en la URL."
+        )
+    observaciones = respuesta["Series"][0].get("OBSERVATIONS") or []
     for observacion in observaciones:
         valor = observacion["OBS_VALUE"]
         valor = None if valor is None or str(valor).strip() == "" else float(valor)
